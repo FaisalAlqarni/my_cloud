@@ -23,6 +23,17 @@ public class FileController {
     Model model,
     @RequestParam("fileUpload") MultipartFile multipartFile
   ) {
+    if (multipartFile.isEmpty()) {
+      model.addAttribute("error", true);
+      model.addAttribute("errorMessage", "Please select a file to upload.");
+      return "result";
+    }
+
+    if (multipartFile.getSize() > 5242880) {
+      model.addAttribute("error", true);
+      model.addAttribute("errorMessage", "File size must be less than 5MB.");
+      return "result";
+    }
     String errorMessage = fileService.upload(multipartFile);
     if (errorMessage != null) {
       model.addAttribute("error", true);
